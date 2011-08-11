@@ -122,7 +122,7 @@ ARG is passed as prefix argument"
   (interactive)
   (xgit-pull "origin"))
 
-(defun* xgit-dvc-push (url &optional (branch "master"))
+(defun* xgit-dvc-push (url &optional branch)
   "Run 'git push url'.
 with prefix arg ask for branch, default to master."
   (interactive "sGit push to: ")

@@ -527,15 +527,17 @@ When called with a prefix argument, ask for the fetch source."
       (setq repository (read-string "Git fetch from: "))))
   (dvc-run-dvc-async 'xgit (list "fetch" repository)))
 
-(defun* xgit-push (url &optional (branch "master"))
+(defun* xgit-push (url &optional branch)
     "Run 'git push url'.
 with prefix arg ask for branch, default to master."
   (interactive "sGit push to: ")
   (lexical-let ((branch-name (if current-prefix-arg
-                             (read-string "Which Branch?: ")
-                             branch))
+                                 (read-string "Which Branch?: ")
+                               (or branch (first (xgit-branch-list)))))
                 (to url))
-    (dvc-run-dvc-async 'xgit (list "push" url branch-name)
+    (dvc-run-dvc-async 'xgit (if branch-name
+                                 (list "push" url branch-name)
+                               (list "push" url))
                        :finished
                        (dvc-capturing-lambda (output error status arguments)
                          (if (eq status 0)
